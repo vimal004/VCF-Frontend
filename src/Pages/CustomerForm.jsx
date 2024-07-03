@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   TextField,
@@ -35,7 +35,9 @@ const CustomerForm = () => {
   const [deleted, setDeleted] = useState(false);
   const [updated, setUpdated] = useState(false);
   const [success, setSuccess] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loadingCreate, setLoadingCreate] = useState(false);
+  const [loadingUpdate, setLoadingUpdate] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
@@ -56,7 +58,7 @@ const CustomerForm = () => {
   }, [formData, tdat]);
 
   const handleDelete = () => {
-    setLoading(true);
+    setLoadingDelete(true);
     axios
       .delete(`https://vcf-backend.vercel.app/customer/${formData.id}`)
       .then(() => {
@@ -72,16 +74,18 @@ const CustomerForm = () => {
           .catch((err) => {
             console.error(err);
           })
-          .finally(() => setLoading(false));
+          .finally(() => setLoadingDelete(false));
       })
       .catch((err) => {
         console.error(err);
-        setLoading(false);
+        setLoadingDelete(false);
+        setErrorMessage("Customer deletion failed");
+        setSuccess(false);
       });
   };
 
   const handleUpdate = () => {
-    setLoading(true);
+    setLoadingUpdate(true);
     axios
       .put("https://vcf-backend.vercel.app/customer", formData)
       .then((res) => {
@@ -89,11 +93,13 @@ const CustomerForm = () => {
         setTimeout(() => {
           setUpdated(false);
         }, 3000);
-        setLoading(false);
+        setLoadingUpdate(false);
       })
       .catch((err) => {
         console.error(err);
-        setLoading(false);
+        setLoadingUpdate(false);
+        setErrorMessage("Customer update failed");
+        setSuccess(false);
       });
   };
 
@@ -105,11 +111,13 @@ const CustomerForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleCreate = (e) => {
     e.preventDefault();
+    setLoadingCreate(true);
     if (!formData.id) {
       setErrorMessage("ID is required");
       setSuccess(false);
+      setLoadingCreate(false);
       return;
     }
 
@@ -150,7 +158,9 @@ const CustomerForm = () => {
       .catch((err) => {
         console.error(err);
         setSuccess(false);
-      });
+        setErrorMessage("Customer creation failed");
+      })
+      .finally(() => setLoadingCreate(false));
   };
 
   const isIdEntered = formData.id.trim() !== "";
@@ -169,7 +179,7 @@ const CustomerForm = () => {
         <Typography variant="h4" align="center" gutterBottom>
           Customer Form
         </Typography>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleCreate}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -244,14 +254,14 @@ const CustomerForm = () => {
                   variant="contained"
                   color="primary"
                   disableElevation
-                  disabled={!isIdEntered || loading}
+                  disabled={!isIdEntered || loadingCreate}
                   style={{
                     borderRadius: "8px",
                     textTransform: "none",
                     margin: "8px",
                   }}
                 >
-                  {loading ? (
+                  {loadingCreate ? (
                     <CircularProgress size={24} color="inherit" />
                   ) : (
                     "Create"
@@ -261,7 +271,7 @@ const CustomerForm = () => {
                   variant="contained"
                   color="warning"
                   disableElevation
-                  disabled={!isIdEntered || loading}
+                  disabled={!isIdEntered || loadingUpdate}
                   onClick={handleUpdate}
                   style={{
                     borderRadius: "8px",
@@ -269,7 +279,7 @@ const CustomerForm = () => {
                     margin: "8px",
                   }}
                 >
-                  {loading ? (
+                  {loadingUpdate ? (
                     <CircularProgress size={24} color="inherit" />
                   ) : (
                     "Update"
@@ -279,7 +289,7 @@ const CustomerForm = () => {
                   variant="contained"
                   color="error"
                   disableElevation
-                  disabled={!isIdEntered || loading}
+                  disabled={!isIdEntered || loadingDelete}
                   onClick={handleDelete}
                   style={{
                     borderRadius: "8px",
@@ -287,7 +297,7 @@ const CustomerForm = () => {
                     margin: "8px",
                   }}
                 >
-                  {loading ? (
+                  {loadingDelete ? (
                     <CircularProgress size={24} color="inherit" />
                   ) : (
                     "Delete"
@@ -323,7 +333,7 @@ const CustomerForm = () => {
           {success === false && (
             <Snackbar open={true} autoHideDuration={3000}>
               <MuiAlert elevation={6} variant="filled" severity="error">
-                Operation Failed
+                {errorMessage}
               </MuiAlert>
             </Snackbar>
           )}

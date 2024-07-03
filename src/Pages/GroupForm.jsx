@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   TextField,
@@ -23,10 +23,17 @@ const GroupForm = () => {
   const [deleted, setDeleted] = useState(false);
   const [updated, setUpdated] = useState(false);
   const [success, setSuccess] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loadingCreate, setLoadingCreate] = useState(false);
+  const [loadingUpdate, setLoadingUpdate] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    // Fetch data or perform any initialization here
+  }, []); // Adjust according to your needs
 
   const handleDelete = () => {
-    setLoading(true);
+    setLoadingDelete(true);
     axios
       .delete("https://vcf-backend.vercel.app/group", {
         headers: {
@@ -36,7 +43,7 @@ const GroupForm = () => {
           group: formData.group,
         },
       })
-      .then((res) => {
+      .then(() => {
         setDeleted(true);
         setTimeout(() => {
           setDeleted(false);
@@ -44,15 +51,17 @@ const GroupForm = () => {
       })
       .catch((err) => {
         console.error("Error deleting group:", err);
+        setErrorMessage("Group deletion failed");
+        setSuccess(false);
       })
-      .finally(() => setLoading(false));
+      .finally(() => setLoadingDelete(false));
   };
 
   const handleUpdate = () => {
-    setLoading(true);
+    setLoadingUpdate(true);
     axios
       .put("https://vcf-backend.vercel.app/group", formData)
-      .then((res) => {
+      .then(() => {
         setUpdated(true);
         setTimeout(() => {
           setUpdated(false);
@@ -60,8 +69,10 @@ const GroupForm = () => {
       })
       .catch((err) => {
         console.error("Error updating group:", err);
+        setErrorMessage("Group update failed");
+        setSuccess(false);
       })
-      .finally(() => setLoading(false));
+      .finally(() => setLoadingUpdate(false));
   };
 
   const handleChange = (e) => {
@@ -74,20 +85,24 @@ const GroupForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoadingCreate(true);
     axios
       .post("https://vcf-backend.vercel.app/group", formData)
-      .then((res) => {
+      .then(() => {
         setSuccess(true);
         setCreated(true);
         setTimeout(() => {
           setCreated(false);
           setSuccess(null);
+          setErrorMessage("");
         }, 3000);
       })
       .catch((err) => {
-        console.error(err);
+        console.error("Error creating group:", err);
         setSuccess(false);
-      });
+        setErrorMessage("Group creation failed");
+      })
+      .finally(() => setLoadingCreate(false));
   };
 
   const isIdEntered = formData.group.trim() !== "";
@@ -168,14 +183,14 @@ const GroupForm = () => {
                   variant="contained"
                   color="primary"
                   disableElevation
-                  disabled={!isIdEntered || loading}
+                  disabled={!isIdEntered || loadingCreate}
                   style={{
                     borderRadius: "8px",
                     textTransform: "none",
                     margin: "8px",
                   }}
                 >
-                  {loading ? (
+                  {loadingCreate ? (
                     <CircularProgress size={24} color="inherit" />
                   ) : (
                     "Create"
@@ -185,7 +200,7 @@ const GroupForm = () => {
                   variant="contained"
                   color="secondary"
                   disableElevation
-                  disabled={!isIdEntered || loading}
+                  disabled={!isIdEntered || loadingUpdate}
                   onClick={handleUpdate}
                   style={{
                     borderRadius: "8px",
@@ -193,7 +208,7 @@ const GroupForm = () => {
                     margin: "8px",
                   }}
                 >
-                  {loading ? (
+                  {loadingUpdate ? (
                     <CircularProgress size={24} color="inherit" />
                   ) : (
                     "Update"
@@ -201,8 +216,9 @@ const GroupForm = () => {
                 </Button>
                 <Button
                   variant="contained"
+                  color="error"
                   disableElevation
-                  disabled={!isIdEntered || loading}
+                  disabled={!isIdEntered || loadingDelete}
                   onClick={handleDelete}
                   style={{
                     borderRadius: "8px",
@@ -210,7 +226,7 @@ const GroupForm = () => {
                     margin: "8px",
                   }}
                 >
-                  {loading ? (
+                  {loadingDelete ? (
                     <CircularProgress size={24} color="inherit" />
                   ) : (
                     "Delete"
@@ -246,7 +262,7 @@ const GroupForm = () => {
           {success === false && (
             <Snackbar open={true} autoHideDuration={3000}>
               <MuiAlert elevation={6} variant="filled" severity="error">
-                Operation Failed
+                {errorMessage}
               </MuiAlert>
             </Snackbar>
           )}
