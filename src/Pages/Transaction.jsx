@@ -17,7 +17,9 @@ import {
   Select,
   MenuItem,
   Button,
+  Snackbar,
 } from "@mui/material";
+import MuiAlert from "@mui/material/Alert";
 
 const Transaction = () => {
   const { customerid } = useParams();
@@ -27,7 +29,9 @@ const Transaction = () => {
   const [gdat, setGdat] = useState(null);
   const [existvalues, setExistValues] = useState(null);
   const [inputValues, setInputValues] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [successMessage, setSuccessMessage] = useState(false);
+  const [pdfGenerated, setPdfGenerated] = useState(false);
   const contentRef = useRef(null);
 
   useEffect(() => {
@@ -59,6 +63,7 @@ const Transaction = () => {
       })
       .then((res) => {
         setExistValues(res?.data?.data?.data);
+        setLoading(false); // Mark loading as complete
       })
       .catch((err) => {
         console.log(err);
@@ -129,7 +134,19 @@ const Transaction = () => {
       const imgHeight = (canvas.height * 208) / canvas.width;
       pdf.addImage(imgData, 0, 0, 208, imgHeight);
       pdf.save("transaction.pdf");
+      setPdfGenerated(true);
+      setTimeout(() => {
+        setPdfGenerated(false);
+      }, 3000);
     });
+  };
+
+  const handleCloseSuccessMessage = () => {
+    setSuccessMessage(false);
+  };
+
+  const handleClosePdfGenerated = () => {
+    setPdfGenerated(false);
   };
 
   return (
@@ -156,124 +173,122 @@ const Transaction = () => {
           <strong>Phone:</strong> {filteredCustomer.phno || "N/A"}
         </Typography>
       </div>
-      <div className="overflow-x-auto">
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Month</TableCell>
-                <TableCell>Auction Date</TableCell>
-                <TableCell>Due Date</TableCell>
-                <TableCell>Remaining Amount</TableCell>
-                <TableCell>Due Amount</TableCell>
-                <TableCell>Paid Amount</TableCell>
-                <TableCell>Status</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {gdat && gdat.months > 0 ? (
-                Array.from({ length: gdat.months }, (_, index) => {
-                  const startMonthIndex = new Date(
-                    gdat.startmonth + "/1/2000"
-                  ).getMonth();
-                  const currentMonthIndex = (startMonthIndex + index) % 12;
-                  const currentMonthName = new Intl.DateTimeFormat("en-US", {
-                    month: "long",
-                  }).format(new Date(2000, currentMonthIndex, 1));
-
-                  return (
-                    <TableRow key={index}>
-                      <TableCell>{currentMonthName}</TableCell>
-                      <TableCell>
-                        <TextField
-                          type="text"
-                          value={inputValues[index]?.auctionDate || ""}
-                          onChange={(e) =>
-                            handleInputChange(e, index, "auctionDate")
-                          }
-                          variant="outlined"
-                          fullWidth
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <TextField
-                          type="text"
-                          value={inputValues[index]?.dueDate || ""}
-                          onChange={(e) =>
-                            handleInputChange(e, index, "dueDate")
-                          }
-                          variant="outlined"
-                          fullWidth
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <TextField
-                          type="text"
-                          value={inputValues[index]?.remainingAmount || ""}
-                          onChange={(e) =>
-                            handleInputChange(e, index, "remainingAmount")
-                          }
-                          variant="outlined"
-                          fullWidth
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <TextField
-                          type="text"
-                          value={inputValues[index]?.dueAmount || ""}
-                          onChange={(e) =>
-                            handleInputChange(e, index, "dueAmount")
-                          }
-                          variant="outlined"
-                          fullWidth
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <TextField
-                          type="text"
-                          value={inputValues[index]?.paidAmount || ""}
-                          onChange={(e) =>
-                            handleInputChange(e, index, "paidAmount")
-                          }
-                          variant="outlined"
-                          fullWidth
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Select
-                          value={inputValues[index]?.status || ""}
-                          onChange={(e) =>
-                            handleInputChange(e, index, "status")
-                          }
-                          variant="outlined"
-                          fullWidth
-                        >
-                          <MenuItem value="">Select Status</MenuItem>
-                          <MenuItem value="Paid">Paid</MenuItem>
-                          <MenuItem value="Defaulter">Unpaid</MenuItem>
-                        </Select>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })
-              ) : (
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <CircularProgress />
+        </div>
+      ) : (
+        <div className="overflow-x-auto" ref={contentRef}>
+          <TableContainer>
+            <Table>
+              <TableHead>
                 <TableRow>
-                  <TableCell colSpan={7}>No transactions found</TableCell>
+                  <TableCell>Month</TableCell>
+                  <TableCell>Auction Date</TableCell>
+                  <TableCell>Due Date</TableCell>
+                  <TableCell>Remaining Amount</TableCell>
+                  <TableCell>Due Amount</TableCell>
+                  <TableCell>Paid Amount</TableCell>
+                  <TableCell>Status</TableCell>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
-      <div className="mt-4">
-        {successMessage && (
-          <Typography
-            variant="body1"
-            className="text-green-500 m-3 text-center"
-          >
-            Update Successful!
-          </Typography>
-        )}
+              </TableHead>
+              <TableBody>
+                {gdat && gdat.months > 0 ? (
+                  Array.from({ length: gdat.months }, (_, index) => {
+                    const startMonthIndex = new Date(
+                      gdat.startmonth + "/1/2000"
+                    ).getMonth();
+                    const currentMonthIndex = (startMonthIndex + index) % 12;
+                    const currentMonthName = new Intl.DateTimeFormat("en-US", {
+                      month: "long",
+                    }).format(new Date(2000, currentMonthIndex, 1));
+
+                    return (
+                      <TableRow key={index}>
+                        <TableCell>{currentMonthName}</TableCell>
+                        <TableCell>
+                          <TextField
+                            type="text"
+                            value={inputValues[index]?.auctionDate || ""}
+                            onChange={(e) =>
+                              handleInputChange(e, index, "auctionDate")
+                            }
+                            variant="outlined"
+                            fullWidth
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <TextField
+                            type="text"
+                            value={inputValues[index]?.dueDate || ""}
+                            onChange={(e) =>
+                              handleInputChange(e, index, "dueDate")
+                            }
+                            variant="outlined"
+                            fullWidth
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <TextField
+                            type="text"
+                            value={inputValues[index]?.remainingAmount || ""}
+                            onChange={(e) =>
+                              handleInputChange(e, index, "remainingAmount")
+                            }
+                            variant="outlined"
+                            fullWidth
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <TextField
+                            type="text"
+                            value={inputValues[index]?.dueAmount || ""}
+                            onChange={(e) =>
+                              handleInputChange(e, index, "dueAmount")
+                            }
+                            variant="outlined"
+                            fullWidth
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <TextField
+                            type="text"
+                            value={inputValues[index]?.paidAmount || ""}
+                            onChange={(e) =>
+                              handleInputChange(e, index, "paidAmount")
+                            }
+                            variant="outlined"
+                            fullWidth
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <Select
+                            value={inputValues[index]?.status || ""}
+                            onChange={(e) =>
+                              handleInputChange(e, index, "status")
+                            }
+                            variant="outlined"
+                            fullWidth
+                          >
+                            <MenuItem value="">Select Status</MenuItem>
+                            <MenuItem value="Paid">Paid</MenuItem>
+                            <MenuItem value="Defaulter">Unpaid</MenuItem>
+                          </Select>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={7}>No transactions found</TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </div>
+      )}
+      <div className="mt-4 space-x-4">
         <Button
           onClick={handleUpdate}
           variant="contained"
@@ -286,6 +301,36 @@ const Transaction = () => {
           Generate PDF
         </Button>
       </div>
+      <Snackbar
+        open={successMessage}
+        autoHideDuration={3000}
+        onClose={handleCloseSuccessMessage}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={handleCloseSuccessMessage}
+          severity="success"
+        >
+          Details Updated Successfully!
+        </MuiAlert>
+      </Snackbar>
+      <Snackbar
+        open={pdfGenerated}
+        autoHideDuration={3000}
+        onClose={handleClosePdfGenerated}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={handleClosePdfGenerated}
+          severity="success"
+        >
+          PDF Generated Successfully!
+        </MuiAlert>
+      </Snackbar>
     </Container>
   );
 };
