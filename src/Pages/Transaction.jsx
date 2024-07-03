@@ -3,6 +3,21 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import {
+  CircularProgress,
+  Container,
+  Typography,
+  Table,
+  TableContainer,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  TextField,
+  Select,
+  MenuItem,
+  Button,
+} from "@mui/material";
 
 const Transaction = () => {
   const { customerid } = useParams();
@@ -95,7 +110,6 @@ const Transaction = () => {
         data: inputValues,
       })
       .then((res) => {
-        //console.log("Transaction updated successfully:", res.data);
         setSuccessMessage(true);
         setTimeout(() => {
           setSuccessMessage(false);
@@ -119,148 +133,160 @@ const Transaction = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto mt-10 p-4" ref={contentRef}>
-      <h1 className="text-3xl font-bold text-center mb-8">Transaction Page</h1>
-      {gdat ? (
-        <h6 className="text-2xl font-bold text-center mb-8">
+    <Container maxWidth="lg" className="mt-10 p-4">
+      <Typography variant="h3" align="center" className="mb-8">
+        Transaction Page
+      </Typography>
+      {gdat && (
+        <Typography variant="h5" align="center" className="mb-8">
           {gdat.groupname}
-        </h6>
-      ) : (
-        <h1></h1>
+        </Typography>
       )}
       <div className="mb-8">
-        <h2 className="text-xl font-semibold">Customer Details</h2>
-        <p className="mt-2">
+        <Typography variant="h6" className="font-semibold">
+          Customer Details
+        </Typography>
+        <Typography variant="body1" className="mt-2">
           <strong>ID:</strong> {customerid}
-        </p>
-        <p className="mt-2">
+        </Typography>
+        <Typography variant="body1" className="mt-2">
           <strong>Name:</strong> {filteredCustomer.name || "N/A"}
-        </p>
-        <p className="mt-2">
+        </Typography>
+        <Typography variant="body1" className="mt-2">
           <strong>Phone:</strong> {filteredCustomer.phno || "N/A"}
-        </p>
+        </Typography>
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full bg-white border border-gray-300">
-          <thead>
-            <tr>
-              <th className="border border-gray-300 px-4 py-2">Month</th>
-              <th className="border border-gray-300 px-4 py-2">Auction Date</th>
-              <th className="border border-gray-300 px-4 py-2">Due Date</th>
-              <th className="border border-gray-300 px-4 py-2">
-                Remaining Amount
-              </th>
-              <th className="border border-gray-300 px-4 py-2">Due Amount</th>
-              <th className="border border-gray-300 px-4 py-2">Paid Amount</th>
-              <th className="border border-gray-300 px-10 py-2">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {gdat && gdat.months > 0 ? (
-              Array.from({ length: gdat.months }, (_, index) => {
-                const startMonthIndex = new Date(
-                  gdat.startmonth + "/1/2000"
-                ).getMonth();
-                const currentMonthIndex = (startMonthIndex + index) % 12;
-                const currentMonthName = new Intl.DateTimeFormat("en-US", {
-                  month: "long",
-                }).format(new Date(2000, currentMonthIndex, 1));
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Month</TableCell>
+                <TableCell>Auction Date</TableCell>
+                <TableCell>Due Date</TableCell>
+                <TableCell>Remaining Amount</TableCell>
+                <TableCell>Due Amount</TableCell>
+                <TableCell>Paid Amount</TableCell>
+                <TableCell>Status</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {gdat && gdat.months > 0 ? (
+                Array.from({ length: gdat.months }, (_, index) => {
+                  const startMonthIndex = new Date(
+                    gdat.startmonth + "/1/2000"
+                  ).getMonth();
+                  const currentMonthIndex = (startMonthIndex + index) % 12;
+                  const currentMonthName = new Intl.DateTimeFormat("en-US", {
+                    month: "long",
+                  }).format(new Date(2000, currentMonthIndex, 1));
 
-                return (
-                  <tr key={index}>
-                    <td className="border border-gray-300 px-4 py-2">
-                      {currentMonthName}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      <input
-                        type="text"
-                        value={inputValues[index]?.auctionDate || ""}
-                        onChange={(e) =>
-                          handleInputChange(e, index, "auctionDate")
-                        }
-                        className="border border-gray-300 rounded-md py-1 px-2 w-full"
-                      />
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      <input
-                        type="text"
-                        value={inputValues[index]?.dueDate || ""}
-                        onChange={(e) => handleInputChange(e, index, "dueDate")}
-                        className="border border-gray-300 rounded-md py-1 px-2 w-full"
-                      />
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      <input
-                        type="text"
-                        value={inputValues[index]?.remainingAmount || ""}
-                        onChange={(e) =>
-                          handleInputChange(e, index, "remainingAmount")
-                        }
-                        className="border border-gray-300 rounded-md py-1 px-2 w-full"
-                      />
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      <input
-                        type="text"
-                        value={inputValues[index]?.dueAmount || ""}
-                        onChange={(e) =>
-                          handleInputChange(e, index, "dueAmount")
-                        }
-                        className="border border-gray-300 rounded-md py-1 px-2 w-full"
-                      />
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      <input
-                        type="text"
-                        value={inputValues[index]?.paidAmount || ""}
-                        onChange={(e) =>
-                          handleInputChange(e, index, "paidAmount")
-                        }
-                        className="border border-gray-300 rounded-md py-1 px-2 w-full"
-                      />
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      <select
-                        value={inputValues[index]?.status || ""}
-                        onChange={(e) => handleInputChange(e, index, "status")}
-                        className="border border-gray-300 rounded-md py-1 px-2 w-full"
-                      >
-                        <option value=""></option>
-                        <option value="Paid">Paid</option>
-                        <option value="Defaulter">Unpaid</option>
-                      </select>
-                    </td>
-                  </tr>
-                );
-              })
-            ) : (
-              <tr>
-                <td className="border border-gray-300 px-4 py-2" colSpan="7">
-                  N/A
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+                  return (
+                    <TableRow key={index}>
+                      <TableCell>{currentMonthName}</TableCell>
+                      <TableCell>
+                        <TextField
+                          type="text"
+                          value={inputValues[index]?.auctionDate || ""}
+                          onChange={(e) =>
+                            handleInputChange(e, index, "auctionDate")
+                          }
+                          variant="outlined"
+                          fullWidth
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <TextField
+                          type="text"
+                          value={inputValues[index]?.dueDate || ""}
+                          onChange={(e) =>
+                            handleInputChange(e, index, "dueDate")
+                          }
+                          variant="outlined"
+                          fullWidth
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <TextField
+                          type="text"
+                          value={inputValues[index]?.remainingAmount || ""}
+                          onChange={(e) =>
+                            handleInputChange(e, index, "remainingAmount")
+                          }
+                          variant="outlined"
+                          fullWidth
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <TextField
+                          type="text"
+                          value={inputValues[index]?.dueAmount || ""}
+                          onChange={(e) =>
+                            handleInputChange(e, index, "dueAmount")
+                          }
+                          variant="outlined"
+                          fullWidth
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <TextField
+                          type="text"
+                          value={inputValues[index]?.paidAmount || ""}
+                          onChange={(e) =>
+                            handleInputChange(e, index, "paidAmount")
+                          }
+                          variant="outlined"
+                          fullWidth
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Select
+                          value={inputValues[index]?.status || ""}
+                          onChange={(e) =>
+                            handleInputChange(e, index, "status")
+                          }
+                          variant="outlined"
+                          fullWidth
+                        >
+                          <MenuItem value="">Select Status</MenuItem>
+                          <MenuItem value="Paid">Paid</MenuItem>
+                          <MenuItem value="Defaulter">Unpaid</MenuItem>
+                        </Select>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={7}>No transactions found</TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </div>
       <div className="mt-4">
         {successMessage && (
-          <p className="text-green-500 m-3 text-center">Update Successful!</p>
+          <Typography
+            variant="body1"
+            className="text-green-500 m-3 text-center"
+          >
+            Update Successful!
+          </Typography>
         )}
-        <button
+        <Button
           onClick={handleUpdate}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          variant="contained"
+          color="primary"
+          className="mr-2"
         >
           Update Details
-        </button>
-        <button
-          onClick={handleGeneratePDF}
-          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-2"
-        >
+        </Button>
+        <Button onClick={handleGeneratePDF} variant="contained" color="success">
           Generate PDF
-        </button>
+        </Button>
       </div>
-    </div>
+    </Container>
   );
 };
 
