@@ -1,5 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
+import {
+  TextField,
+  Button,
+  Snackbar,
+  CircularProgress,
+  Grid,
+  Typography,
+  Container,
+} from "@mui/material";
+import MuiAlert from "@mui/material/Alert";
 
 const CustomerForm = () => {
   const [formData, setFormData] = useState({
@@ -10,66 +20,46 @@ const CustomerForm = () => {
     group: "",
   });
 
-  const [inputValues, setInputValues] = useState({
-    auctionDate: "",
-    dueDate: "",
-    remainingAmount: "",
-    dueAmount: "",
-    paidAmount: "",
-    status: "Pending",
-  });
-
-  const [tdat, setTdat] = useState(null);
-  const [gdat, setGdat] = useState(null);
   const [created, setCreated] = useState(false);
   const [deleted, setDeleted] = useState(false);
   const [updated, setUpdated] = useState(false);
   const [success, setSuccess] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
-
-  useEffect(() => {
-    axios
-      .get("https://vcf-backend.vercel.app/group")
-      .then((response) => {
-        setTdat(response?.data?.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching group:", error);
-      });
-  }, []);
-
-  useEffect(() => {
-    if (tdat) {
-      setGdat(tdat.filter((d) => d.group === formData.group));
-    }
-  }, [formData]);
+  const [loading, setLoading] = useState(false);
 
   const handleDelete = () => {
+    setLoading(true);
     axios
       .delete(`https://vcf-backend.vercel.app/customer/${formData.id}`)
       .then(() => {
-        setDeleted(true);
-        setTimeout(() => {
-          setDeleted(false);
-        }, 3000);
         axios
           .delete(`https://vcf-backend.vercel.app/group/transaction`, {
             data: { id: formData.id },
           })
-          .then((res) => {})
+          .then((res) => {
+            console.log(res);
+            setDeleted(true);
+            setTimeout(() => {
+              setDeleted(false);
+            }, 3000);
+          })
           .catch((err) => {
             console.error(err);
-          });
+          })
+          .finally(() => setLoading(false));
       })
       .catch((err) => {
         console.error(err);
+        setLoading(false);
       });
   };
 
   const handleUpdate = () => {
+    setLoading(true);
     axios
       .put("https://vcf-backend.vercel.app/customer", formData)
       .then((res) => {
+        console.log(res);
         setUpdated(true);
         setTimeout(() => {
           setUpdated(false);
@@ -77,7 +67,8 @@ const CustomerForm = () => {
       })
       .catch((err) => {
         console.error(err);
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   const handleChange = (e) => {
@@ -96,9 +87,11 @@ const CustomerForm = () => {
       return;
     }
 
+    setLoading(true);
     axios
       .post("https://vcf-backend.vercel.app/customer", formData)
-      .then(() => {
+      .then((res) => {
+        console.log(res.data);
         setSuccess(true);
         setCreated(true);
         setTimeout(() => {
@@ -106,153 +99,190 @@ const CustomerForm = () => {
           setSuccess(null);
           setErrorMessage("");
         }, 3000);
-        if (tdat) {
-          setGdat(tdat.filter((d) => d.group === formData.group) || null);
-        }
-        if (gdat && gdat.length > 0) {
-          setInputValues(
-            Array.from({ length: gdat[0].months }, () => ({
-              auctionDate: "",
-              dueDate: "",
-              remainingAmount: "",
-              dueAmount: "",
-              paidAmount: "",
-              status: "Pending",
-            }))
-          );
-
-          axios
-            .post("https://vcf-backend.vercel.app/group/transaction", {
-              id: formData.id,
-              data: inputValues,
-            })
-            .then((res) => {})
-            .catch((err) => {});
-        }
       })
       .catch((err) => {
         console.error(err);
         setSuccess(false);
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
-    <div className="container mx-auto mt-10 p-4">
-      <div className="bg-white shadow-lg rounded-lg p-8 max-w-md mx-auto">
-        <h2 className="text-3xl font-semibold mb-6 text-gray-900 text-center">
+    <Container
+      maxWidth="md"
+      style={{
+        marginTop: "50px", // Adjust margin-top to lower the form
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
+      <div
+        style={{
+          background: "#ffffff",
+          boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.1)",
+          padding: "24px",
+          borderRadius: "8px",
+          width: "100%",
+        }}
+      >
+        <Typography variant="h4" align="center" gutterBottom>
           Customer Form
-        </h2>
+        </Typography>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              ID *
-            </label>
-            <input
-              type="text"
-              name="id"
-              value={formData.id}
-              onChange={handleChange}
-              className="shadow-sm border border-gray-300 rounded-lg w-full py-2 px-4 text-gray-700 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-500 transition duration-200"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Name
-            </label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="shadow-sm border border-gray-300 rounded-lg w-full py-2 px-4 text-gray-700 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-500 transition duration-200"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Phone Number
-            </label>
-            <input
-              type="text"
-              name="phno"
-              value={formData.phno}
-              onChange={handleChange}
-              className="shadow-sm border border-gray-300 rounded-lg w-full py-2 px-4 text-gray-700 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-500 transition duration-200"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Address
-            </label>
-            <input
-              type="text"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              className="shadow-sm border border-gray-300 rounded-lg w-full py-2 px-4 text-gray-700 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-500 transition duration-200"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Group
-            </label>
-            <input
-              type="text"
-              name="group"
-              value={formData.group}
-              onChange={handleChange}
-              className="shadow-sm border border-gray-300 rounded-lg w-full py-2 px-4 text-gray-700 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-500 transition duration-200"
-            />
-          </div>
-          <div className="mt-4 text-center m-5">
-            {created && success && (
-              <div className="text-green-500 font-semibold">
-                Customer Created
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="ID"
+                name="id"
+                value={formData.id}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                required
+                InputProps={{
+                  style: { borderRadius: "8px" },
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                InputProps={{
+                  style: { borderRadius: "8px" },
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Phone Number"
+                name="phno"
+                value={formData.phno}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                InputProps={{
+                  style: { borderRadius: "8px" },
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Address"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                InputProps={{
+                  style: { borderRadius: "8px" },
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Group"
+                name="group"
+                value={formData.group}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                InputProps={{
+                  style: { borderRadius: "8px" },
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  disableElevation
+                  disabled={loading}
+                  style={{
+                    borderRadius: "8px",
+                    textTransform: "none",
+                    marginTop: "16px",
+                    marginRight: "8px",
+                  }}
+                >
+                  {loading ? (
+                    <CircularProgress size={24} color="inherit" />
+                  ) : (
+                    "Create"
+                  )}
+                </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  disableElevation
+                  disabled={!formData.id || loading}
+                  onClick={handleUpdate}
+                  style={{
+                    borderRadius: "8px",
+                    textTransform: "none",
+                    marginTop: "16px",
+                    marginLeft: "8px",
+                  }}
+                >
+                  Update
+                </Button>
+                <Button
+                  variant="contained"
+                  disableElevation
+                  disabled={!formData.id || loading}
+                  onClick={handleDelete}
+                  style={{
+                    borderRadius: "8px",
+                    textTransform: "none",
+                    marginTop: "16px",
+                    marginLeft: "8px",
+                  }}
+                >
+                  Delete
+                </Button>
               </div>
-            )}
-            {success === false && (
-              <div className="text-red-500 font-semibold">
-                {errorMessage || "Customer Creation Failed"}
-              </div>
-            )}
-            {deleted && (
-              <div className="text-green-500 font-semibold">
-                Customer Record Deleted
-              </div>
-            )}
-            {updated && (
-              <div className="text-green-500 font-semibold">
-                Customer Record Updated
-              </div>
-            )}
-          </div>
-          <div className="flex space-x-4 mx-6">
-            <button
-              type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full focus:outline-none focus:ring focus:ring-blue-500 transition duration-200 transform hover:scale-105"
+            </Grid>
+          </Grid>
+          <Snackbar
+            open={created || deleted || updated}
+            autoHideDuration={3000}
+            onClose={() => {
+              setCreated(false);
+              setDeleted(false);
+              setUpdated(false);
+            }}
+          >
+            <MuiAlert
+              elevation={6}
+              variant="filled"
+              severity="success"
+              onClose={() => {
+                setCreated(false);
+                setDeleted(false);
+                setUpdated(false);
+              }}
             >
-              Create
-            </button>
-            <div className="flex space-x-4">
-              <button
-                type="button"
-                onClick={handleUpdate}
-                className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-6 rounded-full focus:outline-none focus:ring focus:ring-yellow-500 transition duration-200 transform hover:scale-105"
-              >
-                Update
-              </button>
-              <button
-                type="button"
-                onClick={handleDelete}
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-full focus:outline-none focus:ring focus:ring-red-500 transition duration-200 transform hover:scale-105"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
+              {created && "Customer Created"}
+              {deleted && "Customer Record Deleted"}
+              {updated && "Customer Record Updated"}
+            </MuiAlert>
+          </Snackbar>
+          {success === false && (
+            <Snackbar open={true} autoHideDuration={3000}>
+              <MuiAlert elevation={6} variant="filled" severity="error">
+                {errorMessage || "Operation Failed"}
+              </MuiAlert>
+            </Snackbar>
+          )}
         </form>
       </div>
-    </div>
+    </Container>
   );
 };
 
