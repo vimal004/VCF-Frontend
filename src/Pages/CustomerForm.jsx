@@ -203,7 +203,7 @@ const CustomerForm = () => {
                   variant="contained"
                   color="primary"
                   disableElevation
-                  disabled={loading}
+                  disabled={!formData.id || loading}
                   style={{
                     borderRadius: "8px",
                     textTransform: "none",
