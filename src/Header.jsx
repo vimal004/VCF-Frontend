@@ -98,7 +98,7 @@ const Header = () => {
 const StyledAppBar = styled(AppBar)({
   backgroundColor: "#ffffff",
   boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.1)",
-  borderRadius: "8px",
+  borderRadius: "12px", // Adjust the borderRadius for curved edges
 });
 
 const Logo = styled("img")({
