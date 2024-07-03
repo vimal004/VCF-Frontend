@@ -10,6 +10,8 @@ import {
   ReportProblem as ReportProblemIcon,
 } from "@mui/icons-material";
 
+import BGIMG from "./img/193294.jpg"; // Adjust path as per your project structure
+
 const Home = () => {
   const buttonStyles = {
     width: "100%",
@@ -36,7 +38,9 @@ const Home = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        background: "#f0f0f0",
+        backgroundImage: `url(${BGIMG})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
         padding: "24px",
       }}
     >
