@@ -1,5 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
+import {
+  TextField,
+  Button,
+  Snackbar,
+  CircularProgress,
+  Grid,
+  Typography,
+  Container,
+} from "@mui/material";
+import MuiAlert from "@mui/material/Alert";
 
 const GroupForm = () => {
   const [formData, setFormData] = useState({
@@ -13,8 +23,10 @@ const GroupForm = () => {
   const [deleted, setDeleted] = useState(false);
   const [updated, setUpdated] = useState(false);
   const [success, setSuccess] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleDelete = () => {
+    setLoading(true);
     axios
       .delete("https://vcf-backend.vercel.app/group", {
         headers: {
@@ -25,7 +37,6 @@ const GroupForm = () => {
         },
       })
       .then((res) => {
-        //console.log(res);
         setDeleted(true);
         setTimeout(() => {
           setDeleted(false);
@@ -33,14 +44,15 @@ const GroupForm = () => {
       })
       .catch((err) => {
         console.error("Error deleting group:", err);
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   const handleUpdate = () => {
+    setLoading(true);
     axios
-      .put(`https://vcf-backend.vercel.app/group`, formData)
+      .put("https://vcf-backend.vercel.app/group", formData)
       .then((res) => {
-        //console.log(res);
         setUpdated(true);
         setTimeout(() => {
           setUpdated(false);
@@ -48,7 +60,8 @@ const GroupForm = () => {
       })
       .catch((err) => {
         console.error("Error updating group:", err);
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   const handleChange = (e) => {
@@ -64,7 +77,6 @@ const GroupForm = () => {
     axios
       .post("https://vcf-backend.vercel.app/group", formData)
       .then((res) => {
-        //console.log(res.data);
         setSuccess(true);
         setCreated(true);
         setTimeout(() => {
@@ -76,112 +88,171 @@ const GroupForm = () => {
         console.error(err);
         setSuccess(false);
       });
-    //console.log("Form Data Submitted:", formData);
   };
 
+  const isIdEntered = formData.group.trim() !== "";
+
   return (
-    <div className="container mx-auto mt-10 p-4">
-      <div className="bg-white shadow-lg rounded-lg p-8 max-w-md mx-auto">
-        <h2 className="text-3xl font-semibold mb-6 text-gray-900 text-center">
+    <Container maxWidth="md" style={{ marginTop: "50px" }}>
+      <div
+        style={{
+          background: "#ffffff",
+          boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.1)",
+          padding: "24px",
+          borderRadius: "8px",
+          width: "100%",
+        }}
+      >
+        <Typography variant="h4" align="center" gutterBottom>
           Group Form
-        </h2>
+        </Typography>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Group Number *
-            </label>
-            <input
-              type="text"
-              name="group"
-              value={formData.group}
-              onChange={handleChange}
-              className="shadow-sm border border-gray-300 rounded-lg w-full py-2 px-4 text-gray-700 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-500 transition duration-200"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Group Name
-            </label>
-            <input
-              type="text"
-              name="groupname"
-              value={formData.groupname}
-              onChange={handleChange}
-              className="shadow-sm border border-gray-300 rounded-lg w-full py-2 px-4 text-gray-700 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-500 transition duration-200"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Months
-            </label>
-            <input
-              type="number"
-              name="months"
-              value={formData.months}
-              onChange={handleChange}
-              className="shadow-sm border border-gray-300 rounded-lg w-full py-2 px-4 text-gray-700 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-500 transition duration-200"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Starting Month
-            </label>
-            <input
-              type="text"
-              name="startmonth"
-              value={formData.startmonth}
-              onChange={handleChange}
-              className="shadow-sm border border-gray-300 rounded-lg w-full py-2 px-4 text-gray-700 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-500 transition duration-200"
-            />
-          </div>
-          <div className="mt-4 text-center m-5">
-            {created && success && (
-              <div className="text-green-500 font-semibold">Group Created</div>
-            )}
-            {success === false && (
-              <div className="text-red-500 font-semibold">
-                {errorMessage || "Customer Creation Failed"}
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                label="Group Number"
+                name="group"
+                value={formData.group}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                required
+                InputProps={{
+                  style: { borderRadius: "8px" },
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Group Name"
+                name="groupname"
+                value={formData.groupname}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                InputProps={{
+                  style: { borderRadius: "8px" },
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Months"
+                name="months"
+                value={formData.months}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                InputProps={{
+                  style: { borderRadius: "8px" },
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Starting Month"
+                name="startmonth"
+                value={formData.startmonth}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                InputProps={{
+                  style: { borderRadius: "8px" },
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  disableElevation
+                  disabled={!isIdEntered || loading}
+                  style={{
+                    borderRadius: "8px",
+                    textTransform: "none",
+                    margin: "8px",
+                  }}
+                >
+                  {loading ? (
+                    <CircularProgress size={24} color="inherit" />
+                  ) : (
+                    "Create"
+                  )}
+                </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  disableElevation
+                  disabled={!isIdEntered || loading}
+                  onClick={handleUpdate}
+                  style={{
+                    borderRadius: "8px",
+                    textTransform: "none",
+                    margin: "8px",
+                  }}
+                >
+                  {loading ? (
+                    <CircularProgress size={24} color="inherit" />
+                  ) : (
+                    "Update"
+                  )}
+                </Button>
+                <Button
+                  variant="contained"
+                  disableElevation
+                  disabled={!isIdEntered || loading}
+                  onClick={handleDelete}
+                  style={{
+                    borderRadius: "8px",
+                    textTransform: "none",
+                    margin: "8px",
+                  }}
+                >
+                  {loading ? (
+                    <CircularProgress size={24} color="inherit" />
+                  ) : (
+                    "Delete"
+                  )}
+                </Button>
               </div>
-            )}
-            {deleted && (
-              <div className="text-green-500 font-semibold">
-                Group Record Deleted
-              </div>
-            )}
-            {updated && (
-              <div className="text-green-500 font-semibold">
-                Group Record Updated
-              </div>
-            )}
-          </div>
-          <div className="flex space-x-4 mx-6">
-            <button
-              type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full focus:outline-none focus:ring focus:ring-blue-500 transition duration-200 transform hover:scale-105"
+            </Grid>
+          </Grid>
+          <Snackbar
+            open={created || deleted || updated}
+            autoHideDuration={3000}
+            onClose={() => {
+              setCreated(false);
+              setDeleted(false);
+              setUpdated(false);
+            }}
+          >
+            <MuiAlert
+              elevation={6}
+              variant="filled"
+              severity="success"
+              onClose={() => {
+                setCreated(false);
+                setDeleted(false);
+                setUpdated(false);
+              }}
             >
-              Create
-            </button>
-            <div className="flex space-x-4">
-              <button
-                type="button"
-                onClick={handleUpdate}
-                className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-6 rounded-full focus:outline-none focus:ring focus:ring-yellow-500 transition duration-200 transform hover:scale-105"
-              >
-                Update
-              </button>
-              <button
-                type="button"
-                onClick={handleDelete}
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-full focus:outline-none focus:ring focus:ring-red-500 transition duration-200 transform hover:scale-105"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
+              {created && "Group Created"}
+              {deleted && "Group Record Deleted"}
+              {updated && "Group Record Updated"}
+            </MuiAlert>
+          </Snackbar>
+          {success === false && (
+            <Snackbar open={true} autoHideDuration={3000}>
+              <MuiAlert elevation={6} variant="filled" severity="error">
+                Operation Failed
+              </MuiAlert>
+            </Snackbar>
+          )}
         </form>
       </div>
-    </div>
+    </Container>
   );
 };
 
