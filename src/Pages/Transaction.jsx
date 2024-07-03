@@ -14,6 +14,8 @@ import {
   TableRow,
   TableCell,
   TextField,
+  Card,
+  CardContent,
   Select,
   MenuItem,
   Button,
@@ -159,20 +161,22 @@ const Transaction = () => {
           {gdat.groupname}
         </Typography>
       )}
-      <div className="mb-8">
-        <Typography variant="h6" className="font-semibold">
-          Customer Details
-        </Typography>
-        <Typography variant="body1" className="mt-2">
-          <strong>ID:</strong> {customerid}
-        </Typography>
-        <Typography variant="body1" className="mt-2">
-          <strong>Name:</strong> {filteredCustomer.name || "N/A"}
-        </Typography>
-        <Typography variant="body1" className="mt-2">
-          <strong>Phone:</strong> {filteredCustomer.phno || "N/A"}
-        </Typography>
-      </div>
+      <Card variant="outlined" className="mb-8">
+        <CardContent>
+          <Typography variant="h6" className="font-semibold">
+            Customer Details
+          </Typography>
+          <Typography variant="body1" className="mt-2">
+            <strong>ID:</strong> {customerid}
+          </Typography>
+          <Typography variant="body1" className="mt-2">
+            <strong>Name:</strong> {filteredCustomer.name || "N/A"}
+          </Typography>
+          <Typography variant="body1" className="mt-2">
+            <strong>Phone:</strong> {filteredCustomer.phno || "N/A"}
+          </Typography>
+        </CardContent>
+      </Card>
       {loading ? (
         <div className="flex justify-center items-center h-64">
           <CircularProgress />
@@ -213,7 +217,7 @@ const Transaction = () => {
                             onChange={(e) =>
                               handleInputChange(e, index, "auctionDate")
                             }
-                            variant="outlined"
+                            variant="standard"
                             fullWidth
                           />
                         </TableCell>
@@ -224,7 +228,7 @@ const Transaction = () => {
                             onChange={(e) =>
                               handleInputChange(e, index, "dueDate")
                             }
-                            variant="outlined"
+                            variant="standard"
                             fullWidth
                           />
                         </TableCell>
@@ -235,7 +239,7 @@ const Transaction = () => {
                             onChange={(e) =>
                               handleInputChange(e, index, "remainingAmount")
                             }
-                            variant="outlined"
+                            variant="standard"
                             fullWidth
                           />
                         </TableCell>
@@ -246,7 +250,7 @@ const Transaction = () => {
                             onChange={(e) =>
                               handleInputChange(e, index, "dueAmount")
                             }
-                            variant="outlined"
+                            variant="standard"
                             fullWidth
                           />
                         </TableCell>
@@ -257,7 +261,7 @@ const Transaction = () => {
                             onChange={(e) =>
                               handleInputChange(e, index, "paidAmount")
                             }
-                            variant="outlined"
+                            variant="standard"
                             fullWidth
                           />
                         </TableCell>
@@ -267,7 +271,7 @@ const Transaction = () => {
                             onChange={(e) =>
                               handleInputChange(e, index, "status")
                             }
-                            variant="outlined"
+                            variant="standard"
                             fullWidth
                           >
                             <MenuItem value="">Select Status</MenuItem>
