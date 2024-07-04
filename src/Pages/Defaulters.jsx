@@ -6,6 +6,15 @@ import {
   Container,
   TextField,
   Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 
 const Defaulters = () => {
@@ -54,6 +63,9 @@ const Defaulters = () => {
     );
   });
 
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <Container
       maxWidth="lg"
@@ -74,6 +86,7 @@ const Defaulters = () => {
         <div
           style={{
             display: "flex",
+            flexDirection: isSmallScreen ? "column" : "row",
             justifyContent: "space-between",
             marginBottom: "16px",
           }}
@@ -85,7 +98,11 @@ const Defaulters = () => {
             label="Filter By Group"
             variant="outlined"
             fullWidth
-            style={{ borderRadius: "8px", marginRight: "8px" }}
+            style={{
+              borderRadius: "8px",
+              marginRight: isSmallScreen ? "0" : "8px",
+              marginBottom: isSmallScreen ? "16px" : "0",
+            }}
           />
           <TextField
             name="name"
@@ -106,61 +123,45 @@ const Defaulters = () => {
             Error: {error}
           </div>
         ) : (
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  ID
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Defaulter Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Phone Number
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Address
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Group Number
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {filteredDefaulters.length > 0 ? (
-                filteredDefaulters.map((defaulter) => (
-                  <tr key={defaulter.id}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <Link
-                        to={`/customers/${defaulter.id}`}
-                        className="text-blue-500 hover:underline"
-                      >
-                        {defaulter.id}
-                      </Link>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {defaulter.name}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {defaulter.phno}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {defaulter.address}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {defaulter.group}
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="5" className="px-6 py-4 text-center">
-                    No Defaulter Record Found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead style={{ backgroundColor: "#f5f5f5" }}>
+                <TableRow>
+                  <TableCell>ID</TableCell>
+                  <TableCell>Defaulter Name</TableCell>
+                  <TableCell>Phone Number</TableCell>
+                  <TableCell>Address</TableCell>
+                  <TableCell>Group Number</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredDefaulters.length > 0 ? (
+                  filteredDefaulters.map((defaulter) => (
+                    <TableRow key={defaulter.id}>
+                      <TableCell>
+                        <Link
+                          to={`/customers/${defaulter.id}`}
+                          style={{ color: "#3f51b5", textDecoration: "none" }}
+                        >
+                          {defaulter.id}
+                        </Link>
+                      </TableCell>
+                      <TableCell>{defaulter.name}</TableCell>
+                      <TableCell>{defaulter.phno}</TableCell>
+                      <TableCell>{defaulter.address}</TableCell>
+                      <TableCell>{defaulter.group}</TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={5} style={{ textAlign: "center" }}>
+                      No Defaulter Record Found
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
         )}
       </div>
     </Container>

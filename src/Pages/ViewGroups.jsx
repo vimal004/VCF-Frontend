@@ -1,6 +1,17 @@
 import React from "react";
 import useFetchData from "./FetchData";
-import { CircularProgress, Container, Typography } from "@mui/material";
+import {
+  CircularProgress,
+  Container,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@mui/material";
 
 const ViewGroups = () => {
   const {
@@ -35,50 +46,36 @@ const ViewGroups = () => {
             Error: {error}
           </div>
         ) : (
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Group Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Group
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Months
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Start Month
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {groups.length > 0 ? (
-                groups.map((group) => (
-                  <tr key={group._id}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {group.groupname}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {group.group}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {group.months}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {group.startmonth}
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="4" className="px-6 py-4 text-center">
-                    No Group Record Found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead style={{ backgroundColor: "#f5f5f5" }}>
+                <TableRow>
+                  <TableCell>Group Name</TableCell>
+                  <TableCell>Group</TableCell>
+                  <TableCell>Months</TableCell>
+                  <TableCell>Start Month</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {groups.length > 0 ? (
+                  groups.map((group) => (
+                    <TableRow key={group._id}>
+                      <TableCell>{group.groupname}</TableCell>
+                      <TableCell>{group.group}</TableCell>
+                      <TableCell>{group.months}</TableCell>
+                      <TableCell>{group.startmonth}</TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={4} style={{ textAlign: "center" }}>
+                      No Group Record Found
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
         )}
       </div>
     </Container>
