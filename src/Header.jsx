@@ -1,16 +1,26 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { AppBar, Toolbar, Typography, Box, Button } from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Box,
+  Button,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import {
   People as PeopleIcon,
   Group as GroupIcon,
-  Visibility as VisibilityIcon,
   ReportProblem as ReportProblemIcon,
 } from "@mui/icons-material";
 import logo from "./img/logo.png";
 import { styled } from "@mui/system";
 
 const Header = () => {
+  const theme = useTheme();
+  const isSm = useMediaQuery(theme.breakpoints.up("sm"));
+
   return (
     <StyledAppBar position="static" color="default" elevation={2}>
       <Toolbar>
@@ -19,25 +29,28 @@ const Header = () => {
           alignItems="center"
           justifyContent="space-between"
           width="100%"
+          flexDirection={isSm ? "row" : "column"}
         >
-          <Link
-            to="/"
-            style={{
-              textDecoration: "none",
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <Logo src={logo} alt="Logo" />
-            <Typography
-              variant="h6"
-              color="inherit"
-              sx={{ ml: 2, fontWeight: 600 }}
+          <HeaderLogoAndTitle isSm={isSm}>
+            <Link
+              to="/"
+              style={{
+                textDecoration: "none",
+                display: "flex",
+                alignItems: "center",
+              }}
             >
-              Customer Database Management
-            </Typography>
-          </Link>
-          <Navigation>
+              <Logo src={logo} alt="Logo" />
+              <Typography
+                variant="h6"
+                color="inherit"
+                sx={{ ml: 2, fontWeight: 600 }}
+              >
+                Customer Database Management
+              </Typography>
+            </Link>
+          </HeaderLogoAndTitle>
+          <Navigation isSm={isSm}>
             <AnimatedButton
               component={Link}
               to="/allcustomers"
@@ -98,8 +111,18 @@ const Header = () => {
 const StyledAppBar = styled(AppBar)({
   backgroundColor: "#ffffff",
   boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.1)",
-  borderRadius: "12px", // Adjust the borderRadius for curved edges
+  borderRadius: "12px",
 });
+
+const HeaderLogoAndTitle = styled(Box)(({ theme, isSm }) => ({
+  backgroundColor: isSm ? "transparent" : "#f5f5f5",
+  padding: isSm ? "0" : "8px 16px",
+  borderRadius: isSm ? "0" : "8px",
+  marginBottom: isSm ? "0" : "16px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: isSm ? "flex-start" : "center",
+}));
 
 const Logo = styled("img")({
   height: "40px",
@@ -107,10 +130,12 @@ const Logo = styled("img")({
   marginRight: "12px",
 });
 
-const Navigation = styled("nav")({
-  display: "flex",
+const Navigation = styled("nav")(({ theme, isSm }) => ({
+  display: isSm ? "flex" : "block",
   alignItems: "center",
-});
+  width: isSm ? "auto" : "100%",
+  textAlign: isSm ? "initial" : "center",
+}));
 
 const AnimatedButton = styled(Button)({
   transition: "background-color 0.3s, color 0.3s",
