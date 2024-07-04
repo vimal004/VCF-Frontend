@@ -10,7 +10,8 @@ import {
   useTheme,
 } from "@mui/material";
 import {
-  People as PeopleIcon,
+  Person as PersonIcon,
+  PeopleAlt as PeopleAltIcon,
   Group as GroupIcon,
   ReportProblem as ReportProblemIcon,
 } from "@mui/icons-material";
@@ -57,7 +58,7 @@ const Header = () => {
               color="inherit"
               variant="text"
               sx={{ fontWeight: 500 }}
-              startIcon={<PeopleIcon />}
+              startIcon={<PeopleAltIcon />}
             >
               View Customers
             </AnimatedButton>
@@ -67,7 +68,7 @@ const Header = () => {
               color="inherit"
               variant="text"
               sx={{ fontWeight: 500 }}
-              startIcon={<PeopleIcon />}
+              startIcon={<PersonIcon />}
             >
               Manage Customers
             </AnimatedButton>
@@ -126,9 +127,10 @@ const HeaderLogoAndTitle = styled(Box)(({ theme, isSm }) => ({
 
 const Logo = styled("img")({
   height: "40px",
-  borderRadius: "50%",
   marginRight: "12px",
+  borderRadius: "0", // Ensure square edges
 });
+
 
 const Navigation = styled("nav")(({ theme, isSm }) => ({
   display: isSm ? "flex" : "block",
