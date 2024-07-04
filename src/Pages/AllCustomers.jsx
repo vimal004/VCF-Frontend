@@ -6,6 +6,15 @@ import {
   CircularProgress,
   Typography,
   Container,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 
 const AllCustomers = () => {
@@ -29,6 +38,9 @@ const AllCustomers = () => {
     );
   });
 
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <Container
       maxWidth="lg"
@@ -49,6 +61,7 @@ const AllCustomers = () => {
         <div
           style={{
             display: "flex",
+            flexDirection: isSmallScreen ? "column" : "row",
             justifyContent: "space-between",
             marginBottom: "16px",
           }}
@@ -60,7 +73,11 @@ const AllCustomers = () => {
             label="Filter By Group"
             variant="outlined"
             fullWidth
-            style={{ borderRadius: "8px", marginRight: "8px" }}
+            style={{
+              borderRadius: "8px",
+              marginRight: isSmallScreen ? "0" : "8px",
+              marginBottom: isSmallScreen ? "16px" : "0",
+            }}
           />
           <TextField
             name="name"
@@ -81,64 +98,45 @@ const AllCustomers = () => {
             Error: {error}
           </div>
         ) : (
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  ID
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Customer Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Phone Number
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Address
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Group Number
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {filteredCustomers.length > 0 ? (
-                filteredCustomers.map((customer, index) => (
-                  <tr
-                    key={customer.id}
-                    className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
-                  >
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <Link
-                        to={`/customers/${customer.id}`}
-                        className="text-blue-500 hover:underline"
-                      >
-                        {customer.id}
-                      </Link>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {customer.name}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {customer.phno}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {customer.address}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {customer.group}
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="5" className="px-6 py-4 text-center">
-                    No Customer Record Found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead style={{ backgroundColor: "#f5f5f5" }}>
+                <TableRow>
+                  <TableCell>ID</TableCell>
+                  <TableCell>Customer Name</TableCell>
+                  <TableCell>Phone Number</TableCell>
+                  <TableCell>Address</TableCell>
+                  <TableCell>Group Number</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredCustomers.length > 0 ? (
+                  filteredCustomers.map((customer) => (
+                    <TableRow key={customer.id}>
+                      <TableCell>
+                        <Link
+                          to={`/customers/${customer.id}`}
+                          style={{ color: "#3f51b5", textDecoration: "none" }}
+                        >
+                          {customer.id}
+                        </Link>
+                      </TableCell>
+                      <TableCell>{customer.name}</TableCell>
+                      <TableCell>{customer.phno}</TableCell>
+                      <TableCell>{customer.address}</TableCell>
+                      <TableCell>{customer.group}</TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={5} style={{ textAlign: "center" }}>
+                      No Customer Record Found
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
         )}
       </div>
     </Container>
