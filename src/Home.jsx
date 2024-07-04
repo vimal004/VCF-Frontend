@@ -41,6 +41,8 @@ const Home = () => {
         backgroundImage: `url(${BGIMG})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
         padding: "24px",
       }}
     >
