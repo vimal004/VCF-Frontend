@@ -137,6 +137,7 @@ const CustomerForm = () => {
       .then(() => {
         setSuccess(true);
         setCreated(true);
+        resetForm();
         setTimeout(() => {
           setCreated(false);
           setSuccess(null);
@@ -162,9 +163,7 @@ const CustomerForm = () => {
               id: formData.id,
               data: inputValues,
             })
-            .then((res) => {
-              resetForm();
-            })
+            .then((res) => {})
             .catch((err) => {});
         }
       })
