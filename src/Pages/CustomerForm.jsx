@@ -39,6 +39,15 @@ const CustomerForm = () => {
   const [loadingUpdate, setLoadingUpdate] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const resetForm = () => {
+    setFormData({
+      id: "",
+      name: "",
+      phno: "",
+      address: "",
+      group: "",
+    });
+  };
 
   useEffect(() => {
     axios
@@ -63,6 +72,7 @@ const CustomerForm = () => {
       .delete(`https://vcf-backend.vercel.app/customer/${formData.id}`)
       .then(() => {
         setDeleted(true);
+        resetForm();
         setTimeout(() => {
           setDeleted(false);
         }, 3000);
@@ -90,6 +100,7 @@ const CustomerForm = () => {
       .put("https://vcf-backend.vercel.app/customer", formData)
       .then((res) => {
         setUpdated(true);
+        resetForm();
         setTimeout(() => {
           setUpdated(false);
         }, 3000);
@@ -151,7 +162,9 @@ const CustomerForm = () => {
               id: formData.id,
               data: inputValues,
             })
-            .then((res) => {})
+            .then((res) => {
+              resetForm();
+            })
             .catch((err) => {});
         }
       })

@@ -19,6 +19,15 @@ const GroupForm = () => {
     startmonth: "",
   });
 
+  const resetForm = () => {
+    setFormData({
+      group: "",
+      groupname: "",
+      months: "",
+      startmonth: "",
+    });
+  };
+
   const [created, setCreated] = useState(false);
   const [deleted, setDeleted] = useState(false);
   const [updated, setUpdated] = useState(false);
@@ -45,6 +54,7 @@ const GroupForm = () => {
       })
       .then(() => {
         setDeleted(true);
+        resetForm();
         setTimeout(() => {
           setDeleted(false);
         }, 3000);
@@ -63,6 +73,7 @@ const GroupForm = () => {
       .put("https://vcf-backend.vercel.app/group", formData)
       .then(() => {
         setUpdated(true);
+        resetForm();
         setTimeout(() => {
           setUpdated(false);
         }, 3000);
@@ -91,6 +102,7 @@ const GroupForm = () => {
       .then(() => {
         setSuccess(true);
         setCreated(true);
+        resetForm();
         setTimeout(() => {
           setCreated(false);
           setSuccess(null);
