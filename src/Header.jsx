@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -21,6 +21,8 @@ import { styled } from "@mui/system";
 const Header = () => {
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.up("sm"));
+  const location = useLocation();
+  const isHome = location.pathname === "/"; // Check if current route is "/"
 
   return (
     <StyledAppBar position="static" color="default" elevation={2}>
@@ -28,11 +30,11 @@ const Header = () => {
         <Box
           display="flex"
           alignItems="center"
-          justifyContent="space-between"
+          justifyContent={isHome ? "center" : "space-between"} // Center when on home
           width="100%"
           flexDirection={isSm ? "row" : "column"}
         >
-          <HeaderLogoAndTitle isSm={isSm}>
+          <HeaderLogoAndTitle isSm={isSm} isHome={isHome}>
             <Link
               to="/"
               style={{
@@ -51,43 +53,47 @@ const Header = () => {
               </Typography>
             </Link>
           </HeaderLogoAndTitle>
-          <Navigation isSm={isSm}>
-            <AnimatedButton
-              component={Link}
-              to="/allcustomers"
-              startIcon={<PeopleAltIcon />}
-            >
-              View Customers
-            </AnimatedButton>
-            <AnimatedButton
-              component={Link}
-              to="/managecustomers"
-              startIcon={<PersonIcon />}
-            >
-              Manage Customers
-            </AnimatedButton>
-            <AnimatedButton
-              component={Link}
-              to="/managegroups"
-              startIcon={<GroupIcon />}
-            >
-              Manage Groups
-            </AnimatedButton>
-            <AnimatedButton
-              component={Link}
-              to="/viewgroups"
-              startIcon={<GroupIcon />}
-            >
-              View Groups
-            </AnimatedButton>
-            <AnimatedButton
-              component={Link}
-              to="/defaulters"
-              startIcon={<ReportProblemIcon />}
-            >
-              View Defaulters
-            </AnimatedButton>
-          </Navigation>
+
+          {/* Hide buttons when on the home page */}
+          {!isHome && (
+            <Navigation isSm={isSm}>
+              <AnimatedButton
+                component={Link}
+                to="/allcustomers"
+                startIcon={<PeopleAltIcon />}
+              >
+                View Customers
+              </AnimatedButton>
+              <AnimatedButton
+                component={Link}
+                to="/managecustomers"
+                startIcon={<PersonIcon />}
+              >
+                Manage Customers
+              </AnimatedButton>
+              <AnimatedButton
+                component={Link}
+                to="/managegroups"
+                startIcon={<GroupIcon />}
+              >
+                Manage Groups
+              </AnimatedButton>
+              <AnimatedButton
+                component={Link}
+                to="/viewgroups"
+                startIcon={<GroupIcon />}
+              >
+                View Groups
+              </AnimatedButton>
+              <AnimatedButton
+                component={Link}
+                to="/defaulters"
+                startIcon={<ReportProblemIcon />}
+              >
+                View Defaulters
+              </AnimatedButton>
+            </Navigation>
+          )}
         </Box>
       </Toolbar>
     </StyledAppBar>
@@ -100,10 +106,10 @@ const StyledAppBar = styled(AppBar)({
   borderRadius: "8px",
 });
 
-const HeaderLogoAndTitle = styled(Box)(({ isSm }) => ({
+const HeaderLogoAndTitle = styled(Box)(({ isSm, isHome }) => ({
   display: "flex",
   alignItems: "center",
-  justifyContent: isSm ? "flex-start" : "center",
+  justifyContent: isHome ? "center" : isSm ? "flex-start" : "center", // Center on home page
 }));
 
 const Logo = styled("img")({
