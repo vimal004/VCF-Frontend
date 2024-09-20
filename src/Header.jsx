@@ -1,5 +1,6 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom"; 
+import img3 from "./img/img4.avif";
 import {
   AppBar,
   Toolbar,
@@ -100,11 +101,13 @@ const Header = () => {
   );
 };
 
-const StyledAppBar = styled(AppBar)({
-  backgroundColor: "#ffffff",
+const StyledAppBar = styled(AppBar)(({ theme }) => ({
+  backgroundImage: `url(${img3})`,
+  backgroundSize: "cover",
+  backgroundPosition: "center",
   boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.1)",
   borderRadius: "8px",
-});
+}));
 
 const HeaderLogoAndTitle = styled(Box)(({ isSm, isHome }) => ({
   display: "flex",

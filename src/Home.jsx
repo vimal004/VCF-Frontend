@@ -10,7 +10,7 @@ import {
   ReportProblem as ReportProblemIcon,
 } from "@mui/icons-material";
 
-import BGIMG from "./img/193294.jpg"; // Adjust path as per your project structure
+import BGIMG from "./img/img3.jpg"; // Adjust path as per your project structure
 
 const Home = () => {
   const buttonStyles = {
