@@ -55,9 +55,6 @@ const Header = () => {
             <AnimatedButton
               component={Link}
               to="/allcustomers"
-              color="inherit"
-              variant="text"
-              sx={{ fontWeight: 500 }}
               startIcon={<PeopleAltIcon />}
             >
               View Customers
@@ -65,9 +62,6 @@ const Header = () => {
             <AnimatedButton
               component={Link}
               to="/managecustomers"
-              color="inherit"
-              variant="text"
-              sx={{ fontWeight: 500 }}
               startIcon={<PersonIcon />}
             >
               Manage Customers
@@ -75,9 +69,6 @@ const Header = () => {
             <AnimatedButton
               component={Link}
               to="/managegroups"
-              color="inherit"
-              variant="text"
-              sx={{ fontWeight: 500 }}
               startIcon={<GroupIcon />}
             >
               Manage Groups
@@ -85,9 +76,6 @@ const Header = () => {
             <AnimatedButton
               component={Link}
               to="/viewgroups"
-              color="inherit"
-              variant="text"
-              sx={{ fontWeight: 500 }}
               startIcon={<GroupIcon />}
             >
               View Groups
@@ -95,9 +83,6 @@ const Header = () => {
             <AnimatedButton
               component={Link}
               to="/defaulters"
-              color="inherit"
-              variant="text"
-              sx={{ fontWeight: 500 }}
               startIcon={<ReportProblemIcon />}
             >
               View Defaulters
@@ -112,14 +97,10 @@ const Header = () => {
 const StyledAppBar = styled(AppBar)({
   backgroundColor: "#ffffff",
   boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.1)",
-  borderRadius: "12px",
+  borderRadius: "8px",
 });
 
-const HeaderLogoAndTitle = styled(Box)(({ theme, isSm }) => ({
-  backgroundColor: isSm ? "transparent" : "#f5f5f5",
-  padding: isSm ? "0" : "8px 16px",
-  borderRadius: isSm ? "0" : "8px",
-  marginBottom: isSm ? "0" : "16px",
+const HeaderLogoAndTitle = styled(Box)(({ isSm }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: isSm ? "flex-start" : "center",
@@ -127,24 +108,21 @@ const HeaderLogoAndTitle = styled(Box)(({ theme, isSm }) => ({
 
 const Logo = styled("img")({
   height: "40px",
-  marginRight: "12px",
-  borderRadius: "0", // Ensure square edges
 });
 
-
-const Navigation = styled("nav")(({ theme, isSm }) => ({
+const Navigation = styled("nav")(({ isSm }) => ({
   display: isSm ? "flex" : "block",
   alignItems: "center",
-  width: isSm ? "auto" : "100%",
   textAlign: isSm ? "initial" : "center",
 }));
 
 const AnimatedButton = styled(Button)({
-  transition: "background-color 0.3s, color 0.3s",
-  borderRadius: "8px",
-  margin: "0 8px",
+  color: "#1976d2",
+  fontWeight: 500,
   padding: "8px 16px",
-  fontSize: "0.9rem",
+  borderRadius: "8px",
+  textTransform: "none",
+  margin: "0 8px",
   "&:hover": {
     backgroundColor: "#f0f0f0",
   },
