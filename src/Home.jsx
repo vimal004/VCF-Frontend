@@ -14,15 +14,17 @@ import BGIMG from "./img/193294.jpg"; // Adjust path as per your project structu
 
 const Home = () => {
   const buttonStyles = {
-    width: "100%",
-    maxWidth: "300px",
+    width: "300px", // Uniform width for all buttons
     borderRadius: "8px",
     textTransform: "none",
     padding: "16px",
+    color: "#fff",
+    backgroundColor: "#1976d2", // Blue color for all buttons
     boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
     transition: "transform 0.3s ease",
     "&:hover": {
       transform: "scale(1.05)",
+      backgroundColor: "#1565c0", // Slightly darker blue on hover
     },
   };
 
@@ -46,19 +48,11 @@ const Home = () => {
         padding: "24px",
       }}
     >
-      <Grid container spacing={3} justifyContent="center">
-        <Grid item xs={12} sm={6} md={4}>
-          <Link
-            to="/allcustomers"
-            style={{
-              textDecoration: "none",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
+      <Grid container spacing={3} direction="column" alignItems="center">
+        <Grid item>
+          <Link to="/allcustomers" style={{ textDecoration: "none" }}>
             <Button
               variant="contained"
-              color="primary"
               sx={buttonStyles}
               startIcon={<AccountCircleIcon sx={iconStyles} />}
             >
@@ -66,18 +60,10 @@ const Home = () => {
             </Button>
           </Link>
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <Link
-            to="/managecustomers"
-            style={{
-              textDecoration: "none",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
+        <Grid item>
+          <Link to="/managecustomers" style={{ textDecoration: "none" }}>
             <Button
               variant="contained"
-              color="success"
               sx={buttonStyles}
               startIcon={<PeopleIcon sx={iconStyles} />}
             >
@@ -85,18 +71,10 @@ const Home = () => {
             </Button>
           </Link>
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <Link
-            to="/managegroups"
-            style={{
-              textDecoration: "none",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
+        <Grid item>
+          <Link to="/managegroups" style={{ textDecoration: "none" }}>
             <Button
               variant="contained"
-              color="error"
               sx={buttonStyles}
               startIcon={<GroupIcon sx={iconStyles} />}
             >
@@ -104,18 +82,10 @@ const Home = () => {
             </Button>
           </Link>
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <Link
-            to="/viewgroups"
-            style={{
-              textDecoration: "none",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
+        <Grid item>
+          <Link to="/viewgroups" style={{ textDecoration: "none" }}>
             <Button
               variant="contained"
-              color="warning"
               sx={buttonStyles}
               startIcon={<VisibilityIcon sx={iconStyles} />}
             >
@@ -123,18 +93,10 @@ const Home = () => {
             </Button>
           </Link>
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <Link
-            to="/defaulters"
-            style={{
-              textDecoration: "none",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
+        <Grid item>
+          <Link to="/defaulters" style={{ textDecoration: "none" }}>
             <Button
               variant="contained"
-              color="secondary"
               sx={buttonStyles}
               startIcon={<ReportProblemIcon sx={iconStyles} />}
             >
