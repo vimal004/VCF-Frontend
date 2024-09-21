@@ -164,7 +164,7 @@ const Transaction = () => {
       <Card variant="outlined" className="mb-8">
         <CardContent>
           <Typography variant="h6" className="font-semibold">
-            Customer Details
+            <strong>Customer Details</strong>
           </Typography>
           <Typography variant="body1" className="mt-2">
             <strong>ID:</strong> {customerid}
