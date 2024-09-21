@@ -16,8 +16,17 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const Defaulters = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+    }
+  }, [navigate]);
+
   const [defaulters, setDefaulters] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

@@ -22,8 +22,17 @@ import {
   Snackbar,
 } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
+import { useNavigate } from "react-router-dom";
 
 const Transaction = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+    }
+  }, [navigate]);
+
   const { customerid } = useParams();
   const [customers, setCustomers] = useState(null);
   const [filteredCustomer, setFilteredCustomer] = useState({});

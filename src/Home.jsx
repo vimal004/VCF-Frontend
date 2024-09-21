@@ -14,8 +14,7 @@ import { useNavigate } from "react-router-dom";
 import BGIMG from "./img/img3.jpg"; // Adjust path as per your project structure
 
 const Home = () => {
-
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
