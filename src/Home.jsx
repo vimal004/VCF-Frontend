@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
@@ -9,10 +9,20 @@ import {
   Visibility as VisibilityIcon,
   ReportProblem as ReportProblemIcon,
 } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 import BGIMG from "./img/img3.jpg"; // Adjust path as per your project structure
 
 const Home = () => {
+
+  const navigate = useNavigate(); 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+    }
+  }, [navigate]);
+
   const buttonStyles = {
     width: "300px", // Uniform width for all buttons
     borderRadius: "8px",

@@ -45,6 +45,7 @@ const LoginForm = () => {
       .then((res) => {
         setLoading(false);
         setSuccess(true);
+        localStorage.setItem("token", res.data.email);
         navigate("/home");
       })
       .catch((err) => {
