@@ -47,7 +47,7 @@ const LoginForm = () => {
     const { email, password } = formData;
 
     axios
-      .post("https://mern-project-backend-green.vercel.app/api/users/login", {
+      .post("https://vcf-backend.vercel.app/login", {
         email,
         password,
       })
