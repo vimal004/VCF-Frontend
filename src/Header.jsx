@@ -23,7 +23,7 @@ const Header = () => {
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.up("sm"));
   const location = useLocation();
-  const isHome = location.pathname === "/"; // Check if current route is "/"
+  const isHome = location.pathname === "/" || location.pathname == "/home"; // Check if current route is "/"
 
   return (
     <StyledAppBar position="static" color="default" elevation={2}>
@@ -37,7 +37,7 @@ const Header = () => {
         >
           <HeaderLogoAndTitle isSm={isSm} isHome={isHome}>
             <Link
-              to="/"
+              to="/home"
               style={{
                 textDecoration: "none",
                 display: "flex",
