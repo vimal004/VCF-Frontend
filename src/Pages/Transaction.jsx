@@ -158,7 +158,7 @@ const Transaction = () => {
       </Typography>
       {gdat && (
         <Typography variant="h5" align="center" className="mb-8">
-          {gdat.groupname}
+          <strong>{gdat.groupname}</strong>
         </Typography>
       )}
       <Card variant="outlined" className="mb-8">
