@@ -24,6 +24,10 @@ const Header = () => {
   const isSm = useMediaQuery(theme.breakpoints.up("sm"));
   const location = useLocation();
   const isHome = location.pathname === "/" || location.pathname == "/home"; // Check if current route is "/"
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/";
+  };
 
   return (
     <StyledAppBar position="static" color="default" elevation={2}>
@@ -54,6 +58,11 @@ const Header = () => {
               </Typography>
             </Link>
           </HeaderLogoAndTitle>
+          {location.pathname == "/home" && (
+            <Button onClick={handleLogout} variant="outlined" sx={{ ml: 2 }}>
+              Logout
+            </Button>
+          )}
 
           {/* Hide buttons when on the home page */}
           {!isHome && (
