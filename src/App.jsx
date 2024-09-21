@@ -8,6 +8,8 @@ import { createBrowserRouter, Outlet } from "react-router-dom";
 import Defaulters from "./Pages/Defaulters";
 import ViewGroups from "./Pages/ViewGroups";
 import GroupForm from "./Pages/GroupForm";
+import { Login } from "@mui/icons-material";
+import LoginForm from "./Pages/Login";
 
 function App() {
   return (
@@ -25,6 +27,10 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
+        element: <LoginForm />,
+      },
+      {
+        path: "/home",
         element: <Home />,
       },
       {
