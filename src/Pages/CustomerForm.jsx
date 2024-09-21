@@ -198,7 +198,7 @@ const CustomerForm = () => {
         }}
       >
         <Typography variant="h4" align="center" gutterBottom>
-          Customer Form
+          <strong>Customer Form</strong>
         </Typography>
         <form onSubmit={handleCreate}>
           <Grid container spacing={2}>

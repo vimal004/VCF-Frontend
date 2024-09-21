@@ -140,7 +140,7 @@ const GroupForm = () => {
         }}
       >
         <Typography variant="h4" align="center" gutterBottom>
-          Group Form
+          <strong>Group Form</strong>
         </Typography>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>

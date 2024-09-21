@@ -90,7 +90,7 @@ const Defaulters = () => {
         }}
       >
         <Typography variant="h4" align="center" gutterBottom>
-          Defaulter Details
+          <strong>Defaulter Details</strong>
         </Typography>
         <div
           style={{

@@ -65,7 +65,7 @@ const AllCustomers = () => {
         }}
       >
         <Typography variant="h4" align="center" gutterBottom>
-          Customer Details
+          <strong>Customer Details</strong>
         </Typography>
         <div
           style={{

@@ -45,7 +45,7 @@ const ViewGroups = () => {
         }}
       >
         <Typography variant="h4" align="center" gutterBottom>
-          Groups
+          <strong>Groups</strong>
         </Typography>
         {loading ? (
           <div style={{ textAlign: "center", marginTop: "20px" }}>

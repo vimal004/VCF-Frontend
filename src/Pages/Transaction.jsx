@@ -163,7 +163,7 @@ const Transaction = () => {
   return (
     <Container maxWidth="lg" className="mt-10 p-4">
       <Typography variant="h3" align="center" className="mb-8">
-        Transaction Page
+        <strong>Transaction Page</strong>
       </Typography>
       {gdat && (
         <Typography variant="h5" align="center" className="mb-8">
